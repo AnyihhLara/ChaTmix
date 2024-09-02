@@ -3,10 +3,10 @@
 	import ChatInput from '$lib/components/Chat/ChatInput.svelte';
 	import Navbar from '$lib/components/Navbar/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
-	import type { ContentMessage } from '$lib/types';
+	import type { Message } from '$lib/types';
 
 	let id = 0;
-	let messages: ContentMessage[] = [
+	let messages: Message[] = [
 		{
 			id: id++,
 			host: true,
@@ -66,7 +66,7 @@
 				host: false,
 				avatar: '',
 				username: 'Josué',
-				timestamp: '4:20pm',
+				timestamp: new Date().toLocaleString(),
 				message: input
 			}
 		];
