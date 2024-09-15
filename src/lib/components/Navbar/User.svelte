@@ -10,5 +10,5 @@
 		<span class="block text-sm">Josué</span>
 		<span class="block truncate text-sm font-medium">name@gmail.com</span>
 	</DropdownHeader>
-	<DropdownItem>Sign out</DropdownItem>
+	<DropdownItem href="/login">Sign out</DropdownItem>
 </Dropdown>

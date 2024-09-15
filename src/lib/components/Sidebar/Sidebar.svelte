@@ -14,11 +14,13 @@
 >
 	<div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
 		<ul class="space-y-2">
-			{#each channels as channel}
-				<SidebarChannel>
-					{channel.name}
-				</SidebarChannel>
-			{/each}
+			{#if channels.length != 0}
+				{#each channels as channel}
+					<SidebarChannel>
+						{channel.name}
+					</SidebarChannel>
+				{/each}
+			{/if}
 		</ul>
 	</div>
 </aside>
