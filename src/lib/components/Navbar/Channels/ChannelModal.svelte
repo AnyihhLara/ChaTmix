@@ -3,13 +3,9 @@
 	import { Label, Input, Button, Modal, DropdownItem, MultiSelect } from 'flowbite-svelte';
 	import { PlusOutline } from 'flowbite-svelte-icons';
 
-	let defaultModal = false;
+	let defaultModal = false,
+		title = '';
 	let channel: Channel = { id: 0, name: '', users: [], messages: [] };
-	$: console.log(defaultModal);
-	const handleSubmit = () => {
-		console.log('here');
-	};
-
 	let selected: (string | number)[] = [];
 	let users = [
 		{ value: 'Anyihh', name: 'Anyihh' },
@@ -18,11 +14,31 @@
 		{ value: 'Paula', name: 'Paula' },
 		{ value: 'Trevor', name: 'Trevor' }
 	];
+
+	export let typeModal = 'Create';
+
+	const handleSubmit = () => {
+		if (typeModal === 'Create') {
+			console.log('channel created');
+		} else if (typeModal === 'Edit') {
+			console.log('channel edited');
+		}
+	};
+
+	$: if (typeModal === 'Create') {
+		title = 'Create new channel';
+	} else if (typeModal === 'Edit') {
+		title = 'Edit channel';
+	}
 </script>
 
-<DropdownItem on:click={() => (defaultModal = true)}>Create new channel</DropdownItem>
+{#if typeModal === 'Create'}
+	<DropdownItem on:click={() => (defaultModal = true)}>Create new channel</DropdownItem>
+{:else if typeModal === 'Edit'}
+	<Button on:click={() => (defaultModal = true)}>Edit channel</Button>
+{/if}
 
-<Modal title="Create a channel" bind:open={defaultModal} autoclose class="min-w-full pb-2">
+<Modal {title} bind:open={defaultModal} class="min-w-full pb-2">
 	<form on:submit={handleSubmit}>
 		<div class="flex flex-col gap-4 mb-4">
 			<div>
@@ -43,7 +59,7 @@
 
 			<Button type="submit" class="w-52 mt-2">
 				<PlusOutline />
-				Create new channel
+				{title}
 			</Button>
 		</div>
 	</form>
