@@ -1,7 +1,7 @@
 <script>
 	import { Dropdown, DropdownHeader, DropdownItem } from 'flowbite-svelte';
 	import { MessageCaptionSolid } from 'flowbite-svelte-icons';
-	import CreateChannelModal from './Channels/CreateChannelModal.svelte';
+	import ChannelModal from './Channels/ChannelModal.svelte';
 	import ChannelsListModal from './Channels/ChannelsListModal.svelte';
 </script>
 
@@ -15,6 +15,6 @@
 	<DropdownHeader>
 		<span class="block text-sm">Channels options</span>
 	</DropdownHeader>
-	<DropdownItem><CreateChannelModal /></DropdownItem>
+	<DropdownItem><ChannelModal /></DropdownItem>
 	<DropdownItem><ChannelsListModal /></DropdownItem>
 </Dropdown>

@@ -15,10 +15,11 @@
 		}
 	];
 	let defaultModal = false;
+	$: console.log('list', defaultModal);
 </script>
 
 <DropdownItem on:click={() => (defaultModal = true)}>Your channels</DropdownItem>
-<Modal title="Channels" bind:open={defaultModal} autoclose class="min-w-full">
+<Modal title="Channels" bind:open={defaultModal} class="min-w-full">
 	<Table hoverable={true} class="mb-4">
 		<TableHead>
 			<TableHeadCell>Name</TableHeadCell>

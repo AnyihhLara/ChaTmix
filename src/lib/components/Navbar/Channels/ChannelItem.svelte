@@ -1,15 +1,16 @@
 <script>
 	import { TableBodyCell, TableBodyRow } from 'flowbite-svelte';
+	import ChannelDeleteModal from './ChannelDeleteModal.svelte';
+	import ChannelModal from './ChannelModal.svelte';
 </script>
 
 <TableBodyRow>
 	<TableBodyCell><slot name="channel-name" /></TableBodyCell>
 	<TableBodyCell><slot name="users" /></TableBodyCell>
 	<TableBodyCell>
-		<a href="/" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Edit</a>
+		<ChannelModal typeModal="Edit" />
 	</TableBodyCell>
 	<TableBodyCell>
-		<a href="/" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Delete</a
-		>
+		<ChannelDeleteModal />
 	</TableBodyCell>
 </TableBodyRow>
