@@ -1,7 +1,6 @@
 export type Message = {
 	id: number;
 	host: boolean;
-	avatar: string;
 	username: string;
 	timestamp: string;
 	message: string;

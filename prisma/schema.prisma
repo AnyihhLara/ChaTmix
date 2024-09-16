@@ -3,32 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  name     String?
-  messages Message[]
-  channels Channel[]
-}
-
-model Message {
-  id        Int      @id @default(autoincrement())
-  timestamp DateTime @default(now())
-  message   String
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  channelId Int
-  channel   Channel  @relation(fields: [channelId], references: [id])
-}
-
-model Channel {
-  id       Int       @id @default(autoincrement())
-  name     String
-  users    User[]
-  messages Message[]
-}

@@ -12,7 +12,7 @@
 	}
 </script>
 
-<svelte:component this={component} avatar={message.avatar}>
+<svelte:component this={component}>
 	<ChatBubbleContent>
 		<span slot="username">{message.username}</span>
 		<span slot="timestamp">{message.timestamp}</span>

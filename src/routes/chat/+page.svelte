@@ -3,74 +3,38 @@
 	import ChatInput from '$lib/components/Chat/ChatInput.svelte';
 	import Navbar from '$lib/components/Navbar/Navbar.svelte';
 	import Sidebar from '$lib/components/Sidebar/Sidebar.svelte';
+	import { loggedUser } from '$lib/stores';
 	import type { Message } from '$lib/types';
+	import type { PageData } from '../$types';
+
+	export let data: PageData;
+	$: $loggedUser = data.session?.user;
 
 	let id = 0;
 	let messages: Message[] = [
 		{
 			id: id++,
 			host: true,
-			avatar: '',
-			username: 'Anyihh',
+			username: 'Josué',
 			timestamp: '4:20pm',
 			message: "It's time"
-		},
-		{ id: id++, host: false, avatar: '', username: 'Josué', timestamp: '4:20pm', message: 'yeah!' },
-		{
-			id: id++,
-			host: true,
-			avatar: '',
-			username: 'Anyihh',
-			timestamp: '4:20pm',
-			message: 'jsjs'
-		},
-		{
-			id: id++,
-			host: true,
-			avatar: '',
-			username: 'Rick',
-			timestamp: '4:21pm',
-			message: 'Hi!'
-		},
-		{
-			id: id++,
-			host: false,
-			avatar: '',
-			username: 'Josué',
-			timestamp: '4:21pm',
-			message: 'hi'
-		},
-		{
-			id: id++,
-			host: true,
-			avatar: '',
-			username: 'Anyihh',
-			timestamp: '4:23pm',
-			message: 'join us'
-		},
-		{
-			id: id++,
-			host: true,
-			avatar: '',
-			username: 'Rick',
-			timestamp: '4:24pm',
-			message: 'of course'
 		}
 	];
 	let input = '';
 	function handleSend() {
-		messages = [
-			...messages,
-			{
-				id: id++,
-				host: false,
-				avatar: '',
-				username: 'Josué',
-				timestamp: new Date().toLocaleString(),
-				message: input
-			}
-		];
-		input = '';
+		if ($loggedUser) {
+			messages = [
+				...messages,
+				{
+					id: id++,
+					host: false,
+					username: $loggedUser.user_metadata.name,
+					timestamp: new Date().toLocaleString(),
+					message: input
+				}
+			];
+			input = '';
+		}
 	}
 </script>
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { loggedUser } from '$lib/stores';
 	import { Avatar, Dropdown, DropdownHeader } from 'flowbite-svelte';
 </script>
 
@@ -11,8 +12,16 @@
 </div>
 <Dropdown placement="bottom" triggeredBy="#avatar-menu">
 	<DropdownHeader>
-		<span class="block text-sm"></span>
-		<span class="block truncate text-sm font-medium"></span>
+		<span class="block text-sm">
+			{#if $loggedUser}
+				{$loggedUser.user_metadata.name}
+			{/if}
+		</span>
+		<span class="block truncate text-sm font-medium">
+			{#if $loggedUser}
+				{$loggedUser.email}
+			{/if}
+		</span>
 	</DropdownHeader>
 	<form method="POST" action="?/signout">
 		<button
