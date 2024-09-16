@@ -2,8 +2,8 @@
 	import HostChatBubble from './HostChatBubble.svelte';
 	import GuestChatBubble from './GuestChatBubble.svelte';
 	import ChatBubbleContent from './ChatBubbleContent.svelte';
-	import type { ContentMessage } from '$lib/types';
-	export let message: ContentMessage;
+	import type { Message } from '$lib/types';
+	export let message: Message;
 	let component = GuestChatBubble;
 	$: if (message.host) {
 		component = HostChatBubble;
