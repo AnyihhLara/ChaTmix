@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import SidebarToggler from '../Sidebar/SidebarToggler.svelte';
 	import Channel from './Channel.svelte';
 	import Logo from './Logo.svelte';

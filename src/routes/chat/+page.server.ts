@@ -5,8 +5,12 @@ export const actions: Actions = {
 	signout: async ({ locals: { supabase, safeGetSession } }) => {
 		const { session } = await safeGetSession();
 		if (session) {
-			await supabase.auth.signOut();
-			redirect(303, '/auth/login');
+			const { error } = await supabase.auth.signOut();
+			if (!error) {
+				redirect(303, '/auth/login');
+			} else {
+				throw new Error('Something went wrong logging you out');
+			}
 		}
 	}
 };

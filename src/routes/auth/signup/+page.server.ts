@@ -6,7 +6,15 @@ export const actions: Actions = {
 		const email = formData.get('email') as string;
 		const password = formData.get('password') as string;
 
-		const { error } = await supabase.auth.signUp({ email, password });
+		const { error } = await supabase.auth.signUp({
+			email,
+			password,
+			options: {
+				data: {
+					name: email.split('@')[0]
+				}
+			}
+		});
 		if (error) {
 			return { error: error.message };
 		} else {
