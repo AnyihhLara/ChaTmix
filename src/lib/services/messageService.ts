@@ -29,7 +29,7 @@ export async function deleteAllUserMessages(userId: string) {
 }
 
 export async function getAllChannelMessages(userId: string, channelId: number): Promise<Message[]> {
-	return await fetchApi(`/api/messages/channel/${userId}/${channelId}/channel`, 'GET');
+	return await fetchApi(`/api/messages/${userId}/${channelId}/channel`, 'GET');
 }
 export async function deleteAllChannelMessages(userId: string, channelId: number) {
 	return await fetchApi(`/api/messages/${userId}/${channelId}/channel`, 'DELETE');

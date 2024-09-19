@@ -1,6 +1,7 @@
 import database from '$lib/db/database';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 import type { User } from '$lib/types';
+import { Prisma } from '@prisma/client';
 
 //get an user
 export const GET: RequestHandler = async ({ params: { user_id } }) => {
@@ -8,6 +9,9 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 		const userData = await database.user.findUnique({
 			where: {
 				id: user_id
+			},
+			include: {
+				channels: true
 			}
 		});
 		if (userData) {
@@ -15,13 +19,16 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 				id: userData.id,
 				name: userData.name,
 				email: userData.email,
+				channels: userData.channels
 			};
 			return json(user);
 		} else {
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while getting the user');
@@ -45,7 +52,9 @@ export const PUT: RequestHandler = async ({ params: { user_id }, request }) => {
 			message: `User ${user_id} updated successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while updating the user');
@@ -66,7 +75,9 @@ export const DELETE: RequestHandler = async ({ params: { user_id } }) => {
 			message: `User ${user_id} deleted successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while deleting the user');

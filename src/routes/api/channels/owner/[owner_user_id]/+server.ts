@@ -1,22 +1,23 @@
 import database from '$lib/db/database';
 import type { Channel } from '$lib/types';
+import { Prisma } from '@prisma/client';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //create a channel
 export const POST: RequestHandler = async ({ params: { owner_user_id }, request }) => {
-	const chnlData:Channel = await request.json();
+	const chnlData: Channel = await request.json();
 
 	try {
 		const channelData = await database.channel.create({
 			data: {
-				name: chnlData.name,
+				name: chnlData.name ? chnlData.name.toString() : '',
 				owner: {
 					connect: {
 						id: owner_user_id
 					}
 				},
-				members:{
-					connect: chnlData.members?.map(member => ({ id:member.id }))
+				members: {
+					connect: chnlData.members?.map((member) => ({ id: member.id }))
 				}
 			},
 			include: {
@@ -34,8 +35,13 @@ export const POST: RequestHandler = async ({ params: { owner_user_id }, request 
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
-			return error(500, e.message);
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			if (e.code === 'P2002') {
+				return error(400, 'A channel with that name already exists.');
+			}
+			return error(400, e.message);
+		} else if (e instanceof Error) {
+			return error(400, e.message);
 		} else {
 			return error(500, 'An error occurred while creating the channel.');
 		}
@@ -63,7 +69,9 @@ export const GET: RequestHandler = async ({ params: { owner_user_id } }) => {
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while getting the channels of this user.');
@@ -84,7 +92,9 @@ export const DELETE: RequestHandler = async ({ params: { owner_user_id } }) => {
 			message: `Channels of user ${owner_user_id} deleted successfully.`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while deleting the channels of this user.');

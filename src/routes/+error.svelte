@@ -8,8 +8,8 @@
 		case 'Not Found':
 			errorInfo = "Sorry, we can't find that page. You'll find lots to explore on the home page.";
 			break;
-		case 'Internal Server Error':
-			errorInfo = "Sorry, we can't find that page. You'll find lots to explore on the home page.";
+		case 'Internal Error':
+			errorInfo = "We are already working to solve the problem.";
 			break;
 		default:
 			errorInfo = 'Enhance your calm.';

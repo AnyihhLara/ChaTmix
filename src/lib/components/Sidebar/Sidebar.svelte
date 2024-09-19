@@ -1,12 +1,31 @@
 <script lang="ts">
-	import { toggleClass, innerWidth } from '$lib/stores/index';
-	import type { Channel } from '$lib/types';
+	import { toggleClass, innerWidth, currentChannel } from '$lib/stores/index';
 	import SidebarChannel from './SidebarChannel.svelte';
+	import type { Channel } from '$lib/types';
+	import { afterUpdate, onMount } from 'svelte';
+	import { loggedUser, length } from '$lib/stores';
+	import { getUser } from '$lib/services/userService';
 
-	export let channels: Channel[] = [{ id: 1, name: 'Test'}];
+	async function updateChannels() {
+		if ($loggedUser) {
+			const userData = await getUser($loggedUser.id);
+			channels = userData.channels;
+			$length = channels?.length;
+		}
+	}
+	onMount(async () => {
+		await updateChannels();
+	});
+
+	let channels: Channel[] | undefined;
 	$: if ($innerWidth >= 768) {
 		$toggleClass = '-translate-x-full';
 	}
+	afterUpdate(async () => {
+		if (channels?.length !== $length) {
+			await updateChannels();
+		}
+	});
 </script>
 
 <aside
@@ -14,9 +33,13 @@
 >
 	<div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
 		<ul class="space-y-2">
-			{#if channels.length != 0}
+			{#if channels && channels.length != 0}
 				{#each channels as channel}
-					<SidebarChannel>
+					<SidebarChannel
+						on:click={() => {
+							$currentChannel = channel.id;
+						}}
+					>
 						{channel.name}
 					</SidebarChannel>
 				{/each}
