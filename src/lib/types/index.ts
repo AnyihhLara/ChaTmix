@@ -1,7 +1,7 @@
 export type Message = {
 	id: number;
-	timestamp: Date;
-	message: string;
+	timestamp?: Date;
+	message?: string;
 	user?: User;
 	channel?: Channel;
 	host?: boolean;
@@ -9,7 +9,7 @@ export type Message = {
 
 export type Channel = {
 	id: number;
-	name: string;
+	name?: string;
 	owner?: User;
 	members?: User[];
 	messages?: Message[];
@@ -17,8 +17,8 @@ export type Channel = {
 
 export type User = {
 	id: string;
-	name: string;
-	email: string;
+	name?: string;
+	email?: string;
 	channels?: Channel[];
 	messages?: Message[];
 	ownChannels?: Channel[];

@@ -1,5 +1,6 @@
 import database from '$lib/db/database';
 import type { Channel } from '$lib/types';
+import { Prisma } from '@prisma/client';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //get a channel
@@ -25,7 +26,9 @@ export const GET: RequestHandler = async ({ params: { channel_id } }) => {
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while getting the channel.');

@@ -15,7 +15,6 @@ model Channel {
   owner         User      @relation("ChannelOwner", fields: [id_user_owner], references: [id], onDelete: Cascade)
   members       User[]    @relation("ChannelMembers")
   messages      Message[]
-  User          User[]
 }
 
 model Message {
@@ -35,6 +34,4 @@ model User {
   ownChannels Channel[] @relation("ChannelOwner")
   channels    Channel[] @relation("ChannelMembers")
   messages    Message[]
-  Channel     Channel?  @relation(fields: [channelId], references: [id])
-  channelId   Int?
 }

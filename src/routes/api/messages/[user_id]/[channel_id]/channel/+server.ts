@@ -1,5 +1,6 @@
 import database from "$lib/db/database";
 import type { Message } from "$lib/types";
+import { Prisma } from "@prisma/client";
 import { error, json, type RequestHandler } from "@sveltejs/kit";
 
 //get all messages from a channel
@@ -21,7 +22,7 @@ export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) =
 				id: messageData.id,
 				timestamp: messageData.timestamp,
 				message: messageData.message,
-				host: user_id === messageData.user.id,
+				host: user_id !== messageData.user.id,
 				user: {
 					id: messageData.user.id,
 					name: messageData.user.name,
@@ -33,7 +34,9 @@ export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) =
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(
@@ -57,7 +60,9 @@ export const DELETE: RequestHandler = async ({ params: { channel_id } }) => {
 			message: `Messages of channel ${channel_id} deleted successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(

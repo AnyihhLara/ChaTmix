@@ -12,8 +12,8 @@ export async function deleteUser(userId: string) {
 }
 
 export async function getAllUsers(): Promise<User[]> {
-	return await fetchApi(`/api/users}`, 'GET');
+	return await fetchApi(`/api/users`, 'GET');
 }
 export async function deleteAllUsers() {
-	return await fetchApi(`/api/users}`, 'DELETE');
+	return await fetchApi(`/api/users`, 'DELETE');
 }

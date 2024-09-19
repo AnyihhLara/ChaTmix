@@ -1,5 +1,6 @@
 import database from '$lib/db/database';
 import type { Message } from '$lib/types';
+import { Prisma } from '@prisma/client';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //get a message
@@ -21,7 +22,9 @@ export const GET: RequestHandler = async ({ params: { message_id } }) => {
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while getting the message');
@@ -38,14 +41,16 @@ export const PUT: RequestHandler = async ({ params: { message_id }, request }) =
 			where: {
 				id: Number(message_id)
 			},
-			data:messageData
+			data: messageData
 		});
 
 		return json({
 			message: `Message ${message_id} updated successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while updating the message');
@@ -66,11 +71,12 @@ export const DELETE: RequestHandler = async ({ params: { message_id } }) => {
 			message: `Message ${message_id} deleted successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(500, 'An error occurred while deleting the message');
 		}
 	}
 };
-

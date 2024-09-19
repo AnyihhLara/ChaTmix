@@ -1,5 +1,6 @@
 import database from '$lib/db/database';
 import type { Message } from '$lib/types';
+import { Prisma } from '@prisma/client';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //create a message
@@ -28,15 +29,18 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 			const message: Message = {
 				id: messageData.id,
 				timestamp: messageData.timestamp,
-				message: messageData.message
+				message: messageData.message,
+				host: false
 			};
 			return json(message);
 		} else {
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
-			return error(500, e.message);
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
+			return error(400, e.message);
 		} else {
 			return error(500, 'An error occurred while creating the message.');
 		}
@@ -66,7 +70,9 @@ export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) =
 			return json(null);
 		}
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(
@@ -91,7 +97,9 @@ export const DELETE: RequestHandler = async ({ params: { user_id, channel_id } }
 			message: `Messages from user ${user_id} of channel ${channel_id} deleted successfully`
 		});
 	} catch (e: unknown) {
-		if (e instanceof Error) {
+		if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			return error(400, e.message);
+		} else if (e instanceof Error) {
 			return error(500, e.message);
 		} else {
 			return error(

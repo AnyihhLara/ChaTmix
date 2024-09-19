@@ -1,26 +1,36 @@
 <script lang="ts">
-	import { DropdownItem, Modal, Table, TableBody, TableHead, TableHeadCell } from 'flowbite-svelte';
+	import {
+		DropdownItem,
+		Modal,
+		Table,
+		TableBody,
+		TableHead,
+		TableHeadCell,
+		Spinner
+	} from 'flowbite-svelte';
 	import ChannelItem from './ChannelItem.svelte';
 	import type { Channel } from '$lib/types';
+	import { onMount } from 'svelte';
+	import { getAllUserChannels } from '$lib/services/channelService';
+	import { loggedUser } from '$lib/stores';
 
-	export let channels: Channel[] = [
-		{
-			id: 1,
-			name: 'Test',
-			members: [
-				{ id: '1', email: '', name: 'Anyihh' },
-				{ id: '2', email: '', name: 'Franklin' }
-			],
-			messages: []
+	onMount(async () => {
+		if ($loggedUser) {
+			channels = await getAllUserChannels($loggedUser.id);
+			if (channels) {
+				loading = false;
+			}
 		}
-	];
+	});
+
+	let channels: Channel[] = [],
+		loading = true;
 	let defaultModal = false;
-	$: console.log('list', defaultModal);
 </script>
 
 <DropdownItem on:click={() => (defaultModal = true)}>Your channels</DropdownItem>
 <Modal title="Channels" bind:open={defaultModal} class="min-w-full">
-	<Table hoverable={true} class="mb-4">
+	<Table hoverable={true} class="">
 		<TableHead>
 			<TableHeadCell>Name</TableHeadCell>
 			<TableHeadCell>Users</TableHeadCell>
@@ -33,12 +43,12 @@
 		</TableHead>
 		<TableBody tableBodyClass="divide-y">
 			{#each channels as channel}
-				<ChannelItem>
+				<ChannelItem {channel}>
 					<span slot="channel-name">{channel.name}</span>
 					<span slot="users">
 						{#if channel.members}
-							{#each channel.members as member}
-								{member.name},
+							{#each channel.members as member, index}
+								{member.name}{index !== channel.members.length - 1 ? ', ' : ''}
 							{/each}
 						{/if}
 					</span>
@@ -46,4 +56,9 @@
 			{/each}
 		</TableBody>
 	</Table>
+	{#if loading}
+		<div class="w-full flex justify-center">
+			<Spinner size="12" />
+		</div>
+	{/if}
 </Modal>

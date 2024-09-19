@@ -1,7 +1,7 @@
 import type { Channel } from '$lib/types';
 import { fetchApi } from '$lib/utils';
 
-export async function createChannel(ownerUserId: string, channelData: Channel): Promise<Channel> {
+export async function createChannel(ownerUserId: string, channelData: Channel): Promise<unknown> {
 	return await fetchApi(`/api/channels/owner/${ownerUserId}`, 'POST', channelData);
 }
 export async function getChannel(channelId: number): Promise<Channel> {
