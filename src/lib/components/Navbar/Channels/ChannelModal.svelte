@@ -1,29 +1,15 @@
 <script lang="ts">
 	import type { Channel } from '$lib/types';
 	import { Label, Input, Button, Modal, DropdownItem, MultiSelect } from 'flowbite-svelte';
-	import { PlusOutline } from 'flowbite-svelte-icons';
+	import { PlusOutline, EditOutline } from 'flowbite-svelte-icons';
 
+	let channel: Channel = { id: 0, name: '', members:[] };
 	let defaultModal = false,
 		title = '';
-	let channel: Channel = { id: 0, name: '', users: [], messages: [] };
 	let selected: (string | number)[] = [];
-	let users = [
-		{ value: 'Anyihh', name: 'Anyihh' },
-		{ value: 'Franklin', name: 'Franklin' },
-		{ value: 'Michael', name: 'Michael' },
-		{ value: 'Paula', name: 'Paula' },
-		{ value: 'Trevor', name: 'Trevor' }
-	];
+	let users = [{ value: 'Franklin', name: 'Franklin' }];
 
 	export let typeModal = 'Create';
-
-	const handleSubmit = () => {
-		if (typeModal === 'Create') {
-			console.log('channel created');
-		} else if (typeModal === 'Edit') {
-			console.log('channel edited');
-		}
-	};
 
 	$: if (typeModal === 'Create') {
 		title = 'Create new channel';
@@ -39,7 +25,7 @@
 {/if}
 
 <Modal {title} bind:open={defaultModal} class="min-w-full pb-2">
-	<form on:submit={handleSubmit}>
+	<form method="POST" action="?/createchannel">
 		<div class="flex flex-col gap-4 mb-4">
 			<div>
 				<Label for="name" class="mb-2">Name</Label>
@@ -57,8 +43,16 @@
 				<MultiSelect id="users" name="users" items={users} bind:value={selected} size="lg" />
 			</div>
 
-			<Button type="submit" class="w-52 mt-2">
-				<PlusOutline />
+			<Button
+				type="submit"
+				class="w-52 mt-2"
+				formaction={typeModal === 'Edit' ? '?/editchannel' : ''}
+			>
+				{#if typeModal === 'Create'}
+					<PlusOutline />
+				{:else if typeModal === 'Edit'}
+					<EditOutline />
+				{/if}
 				{title}
 			</Button>
 		</div>

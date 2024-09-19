@@ -3,7 +3,7 @@
 	import type { Channel } from '$lib/types';
 	import SidebarChannel from './SidebarChannel.svelte';
 
-	export let channels: Channel[] = [{ id: 1, name: 'Test', users: [], messages: [] }];
+	export let channels: Channel[] = [{ id: 1, name: 'Test'}];
 	$: if ($innerWidth >= 768) {
 		$toggleClass = '-translate-x-full';
 	}

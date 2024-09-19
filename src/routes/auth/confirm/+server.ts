@@ -12,7 +12,6 @@ export const GET: RequestHandler = async ({ url, locals: { supabase } }) => {
 	redirectTo.pathname = next;
 	redirectTo.searchParams.delete('token_hash');
 	redirectTo.searchParams.delete('type');
-	console.log(redirectTo);
 	let e;
 
 	if (token_hash && type) {

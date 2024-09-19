@@ -14,10 +14,7 @@
 			<span>Your password</span>
 			<Input type="password" name="password" placeholder="••••••••" required />
 		</Label>
-		<div class="flex items-center justify-between">
-			<div class="flex items-start">
-				<Checkbox>Remember me</Checkbox>
-			</div>
+		<div class="flex items-center justify-end">
 			<a href="/" class="ml-auto text-sm text-blue-700 hover:underline dark:text-blue-500"
 				>Forgot password?</a
 			>

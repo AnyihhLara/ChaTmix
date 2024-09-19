@@ -1,25 +1,25 @@
 export type Message = {
 	id: number;
-	host: boolean;
-	username: string;
-	timestamp: string;
+	timestamp: Date;
 	message: string;
-	// userId: number;
-	// channelId: number;
-	// channel: Channel;
+	user?: User;
+	channel?: Channel;
+	host?: boolean;
 };
 
 export type Channel = {
 	id: number;
 	name: string;
-	users: User[];
-	messages: Message[];
+	owner?: User;
+	members?: User[];
+	messages?: Message[];
 };
 
 export type User = {
-	id: number;
-	email: string;
+	id: string;
 	name: string;
-	messages: Message[];
-	channels: Channel[];
+	email: string;
+	channels?: Channel[];
+	messages?: Message[];
+	ownChannels?: Channel[];
 };

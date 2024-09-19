@@ -3,8 +3,38 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
+model Channel {
+  id            Int       @id @default(autoincrement())
+  name          String    @unique @db.VarChar
+  id_user_owner String    @db.Uuid
+  owner         User      @relation("ChannelOwner", fields: [id_user_owner], references: [id], onDelete: Cascade)
+  members       User[]    @relation("ChannelMembers")
+  messages      Message[]
+  User          User[]
+}
+
+model Message {
+  id         Int      @id @default(autoincrement())
+  timestamp  DateTime @db.Timestamp(6)
+  message    String
+  id_channel Int
+  id_user    String   @db.Uuid
+  channel    Channel  @relation(fields: [id_channel], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user       User     @relation(fields: [id_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model User {
+  id          String    @id @db.Uuid
+  name        String    @unique @db.VarChar
+  email       String    @unique @db.VarChar
+  ownChannels Channel[] @relation("ChannelOwner")
+  channels    Channel[] @relation("ChannelMembers")
+  messages    Message[]
+  Channel     Channel?  @relation(fields: [channelId], references: [id])
+  channelId   Int?
+}
