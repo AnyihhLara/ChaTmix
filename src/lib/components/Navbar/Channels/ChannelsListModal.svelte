@@ -7,9 +7,9 @@
 		{
 			id: 1,
 			name: 'Test',
-			users: [
-				{ id: 1, email: '', name: 'Anyihh', messages: [], channels: [] },
-				{ id: 2, email: '', name: 'Franklin', messages: [], channels: [] }
+			members: [
+				{ id: '1', email: '', name: 'Anyihh' },
+				{ id: '2', email: '', name: 'Franklin' }
 			],
 			messages: []
 		}
@@ -35,11 +35,13 @@
 			{#each channels as channel}
 				<ChannelItem>
 					<span slot="channel-name">{channel.name}</span>
-					<span slot="users"
-						>{#each channel.users as user}
-							{user.name},
-						{/each}</span
-					>
+					<span slot="users">
+						{#if channel.members}
+							{#each channel.members as member}
+								{member.name},
+							{/each}
+						{/if}
+					</span>
 				</ChannelItem>
 			{/each}
 		</TableBody>

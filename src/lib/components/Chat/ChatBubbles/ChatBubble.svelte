@@ -14,7 +14,7 @@
 
 <svelte:component this={component}>
 	<ChatBubbleContent>
-		<span slot="username">{message.username}</span>
+		<span slot="username">{message.user?.name}</span>
 		<span slot="timestamp">{message.timestamp}</span>
 		<span slot="message">{message.message}</span>
 	</ChatBubbleContent>
