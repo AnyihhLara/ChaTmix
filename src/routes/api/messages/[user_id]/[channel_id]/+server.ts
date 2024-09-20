@@ -11,7 +11,6 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 		const messageData = await database.message.create({
 			data: {
 				message: msgData.message,
-				timestamp: msgData.timestamp,
 				channel: {
 					connect: {
 						id: Number(channel_id)
@@ -24,7 +23,6 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 				}
 			}
 		});
-
 		if (messageData) {
 			const message: Message = {
 				id: messageData.id,

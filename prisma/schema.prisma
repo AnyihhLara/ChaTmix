@@ -19,7 +19,7 @@ model Channel {
 
 model Message {
   id         Int      @id @default(autoincrement())
-  timestamp  DateTime @db.Timestamp(6)
+  timestamp  DateTime @default(now())
   message    String
   id_channel Int
   id_user    String   @db.Uuid
