@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { createChannel, updateChannel } from '$lib/services/channelService';
 	import type { Channel } from '$lib/types';
-	import { length, loggedUser } from '$lib/stores';
+	import { channelsLength, loggedUser } from '$lib/stores';
 	import { Label, Input, Button, Modal, DropdownItem, MultiSelect, Badge } from 'flowbite-svelte';
 	import { PlusOutline, EditOutline } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
@@ -30,11 +30,11 @@
 	let defaultModal = false,
 		title = '',
 		disabled = true,
+		disabledLoading = false,
 		users: { value: string; name: string }[] = [],
 		selected: (string | number)[] = [],
 		error: string | null = null,
-		success: string | null = null,
-		cursor = '';
+		success: string | null = null;
 
 	export let typeModal = 'Create';
 
@@ -64,7 +64,7 @@
 		}
 	}
 	async function handleSubmit() {
-		cursor = 'cursor-wait';
+		disabledLoading = true;
 		mapMembers();
 
 		if ($loggedUser) {
@@ -82,24 +82,18 @@
 			} catch (e) {
 				if (e instanceof Error) {
 					error = e.message;
-					cursor = '';
-					setTimeout(() => {
-						error = null;
-					}, 3000);
+					resetForm();
 				}
 			}
 		}
 	}
 
 	function resetForm() {
-		if ($length) {
-			$length++;
+		if ($channelsLength) {
+			$channelsLength++;
 		}
-		cursor = '';
 		setTimeout(() => {
-			success = null;
 			defaultModal = false;
-			channel = { id: 0, name: '', members: [] };
 		}, 3000);
 	}
 </script>
@@ -110,7 +104,12 @@
 	<Button on:click={() => (defaultModal = true)}>Edit channel</Button>
 {/if}
 
-<Modal {title} bind:open={defaultModal} class="min-w-full {cursor}" autoclose={false}>
+<Modal
+	{title}
+	bind:open={defaultModal}
+	class="min-w-full {disabledLoading ? 'cursor-wait' : ''}"
+	autoclose={false}
+>
 	<form on:submit|preventDefault={handleSubmit}>
 		<div class="flex flex-col gap-4">
 			<div>
@@ -122,6 +121,7 @@
 					placeholder="Type channel name"
 					required
 					bind:value={channel.name}
+					disabled={disabledLoading}
 				/>
 			</div>
 			<div>
@@ -139,7 +139,13 @@
 				</MultiSelect>
 			</div>
 
-			<Button type="submit" class="w-52 mt-2 {cursor}" {disabled}>
+			<Button
+				type="submit"
+				class="w-52 mt-2 {disabledLoading
+					? 'pointer-events-none cursor-not-allowed opacity-50'
+					: ''}"
+				{disabled}
+			>
 				{#if typeModal === 'Create'}
 					<PlusOutline />
 				{:else if typeModal === 'Edit'}

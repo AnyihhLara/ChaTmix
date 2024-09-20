@@ -1,28 +1,68 @@
 <script lang="ts">
-	import { toggleClass, innerWidth, currentChannel } from '$lib/stores/index';
+	import {
+		toggleClass,
+		innerWidth,
+		loggedUser,
+		channelsLength,
+		currentChannelChange,
+		currentChannel
+	} from '$lib/stores/index';
 	import SidebarChannel from './SidebarChannel.svelte';
 	import type { Channel } from '$lib/types';
 	import { afterUpdate, onMount } from 'svelte';
-	import { loggedUser, length } from '$lib/stores';
 	import { getUser } from '$lib/services/userService';
+	import { supabase } from '$lib/supabaseClient';
+	import { getChannel } from '$lib/services/channelService';
 
 	async function updateChannels() {
 		if ($loggedUser) {
 			const userData = await getUser($loggedUser.id);
-			channels = userData.channels;
-			$length = channels?.length;
+			channels = userData.channels ? userData.channels : [];
+			$channelsLength = channels?.length;
 		}
 	}
 	onMount(async () => {
 		await updateChannels();
+		supabase
+			.channel('_ChannelMembers')
+			.on(
+				'postgres_changes',
+				{ event: 'INSERT', schema: 'public', table: '_ChannelMembers' },
+				async (payload) => {
+					if (payload.new['B'] === $loggedUser?.id) {
+						const channel = await getChannel(payload.new['A']);
+						channels = [...channels, channel];
+					}
+				}
+			)
+			.on(
+				'postgres_changes',
+				{ event: 'DELETE', schema: 'public', table: '_ChannelMembers' },
+				async (payload) => {
+					if (payload.old['B'] === $loggedUser?.id) {
+						channels = channels.filter((channel) => channel.id !== payload.old['A']);
+					}
+				}
+			)
+			.subscribe();
+		supabase
+			.channel('Channel')
+			.on(
+				'postgres_changes',
+				{ event: 'DELETE', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					channels = channels.filter((channel) => channel.id !== payload.old['id']);
+				}
+			)
+			.subscribe();
 	});
 
-	let channels: Channel[] | undefined;
+	let channels: Channel[];
 	$: if ($innerWidth >= 768) {
 		$toggleClass = '-translate-x-full';
 	}
 	afterUpdate(async () => {
-		if (channels?.length !== $length) {
+		if (channels?.length !== $channelsLength) {
 			await updateChannels();
 		}
 	});
@@ -36,8 +76,15 @@
 			{#if channels && channels.length != 0}
 				{#each channels as channel}
 					<SidebarChannel
+						activated={$currentChannel === channel.id}
 						on:click={() => {
+							const previous = $currentChannel;
 							$currentChannel = channel.id;
+							if (previous !== $currentChannel) {
+								$currentChannelChange = true;
+							} else {
+								$currentChannelChange = false;
+							}
 						}}
 					>
 						{channel.name}
