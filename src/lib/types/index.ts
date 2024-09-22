@@ -5,6 +5,7 @@ export type Message = {
 	user?: User;
 	channel?: Channel;
 	host?: boolean;
+	fileUrl?: string;
 };
 
 export type Channel = {

@@ -48,6 +48,9 @@
 	} else {
 		disabled = true;
 	}
+	$: if (channel.name?.length && channel.name.length >= 26) {
+		channel.name = channel.name.substring(0,27);
+	}
 	function mapMembers() {
 		if ($loggedUser && channel.members !== undefined) {
 			channel.members = selected.map((member) => ({

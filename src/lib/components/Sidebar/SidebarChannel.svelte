@@ -12,6 +12,6 @@
 		on:click
 	>
 		<MessageCaptionSolid />
-		<span class="flex-1 ml-3 whitespace-nowrap"><slot /></span>
+		<span class="flex-1 ml-3 whitespace-nowrap break-words"><slot /></span>
 	</button>
 </li>

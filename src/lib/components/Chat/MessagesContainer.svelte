@@ -35,6 +35,7 @@
 							id: payload.new['id'],
 							message: payload.new['message'],
 							timestamp: payload.new['timestamp'],
+							fileUrl: payload.new['fileUrl'],
 							user: user
 						}
 					];
@@ -80,15 +81,15 @@
 
 <div
 	bind:this={chatContainer}
-	class="{$currentChannel !== -1 ? 'overflow-y-auto h-[calc(100vh-170px)]' : ''} pr-2"
+	class="{$currentChannel !== -1 ? 'overflow-y-auto h-[calc(100vh-200px)]' : ''} pr-2"
 >
 	{#if loading}
 		<div class="flex flex-col gap-8 pl-10 pt-2">
-			<TextPlaceholder size="md" />
+			<TextPlaceholder size="sm" />
 			<div class="flex justify-end">
-				<TextPlaceholder size="md" class="w-full" />
+				<TextPlaceholder size="sm" class="w-full" />
 			</div>
-			<TextPlaceholder size="md" />
+			<TextPlaceholder size="sm" />
 		</div>
 	{:else if messages}
 		{#each messages as message}
@@ -100,20 +101,3 @@
 	{/if}
 </div>
 
-<style lang="postcss">
-	::-webkit-scrollbar {
-		width: 10px;
-	}
-	::-webkit-scrollbar-track {
-		background: #f1f1f100;
-		border-radius: 5px;
-	}
-
-	::-webkit-scrollbar-thumb {
-		background: #6d28d9;
-		border-radius: 5px;
-	}
-	::-webkit-scrollbar-thumb:hover {
-		background: #b676e0;
-	}
-</style>
