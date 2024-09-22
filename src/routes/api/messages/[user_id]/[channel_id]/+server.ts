@@ -11,6 +11,7 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 		const messageData = await database.message.create({
 			data: {
 				message: msgData.message,
+				fileUrl: msgData.fileUrl,
 				channel: {
 					connect: {
 						id: Number(channel_id)

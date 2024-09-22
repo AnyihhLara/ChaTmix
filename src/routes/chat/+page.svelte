@@ -8,7 +8,7 @@
 	$: $loggedUser = data.session?.user;
 </script>
 
-<main class="flex flex-col justify-between p-4 md:ml-64 min-h-screen pt-20">
+<main class="flex flex-col justify-between p-4 md:ml-64 min-h-screen pt-20 pb-2">
 	<MessagesContainer />
 	<ChatInput />
 </main>

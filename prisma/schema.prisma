@@ -21,6 +21,7 @@ model Message {
   id         Int      @id @default(autoincrement())
   timestamp  DateTime @default(now())
   message    String
+  fileUrl    String?
   id_channel Int
   id_user    String   @db.Uuid
   channel    Channel  @relation(fields: [id_channel], references: [id], onDelete: NoAction, onUpdate: NoAction)
