@@ -1,12 +1,5 @@
 <script lang="ts">
-	import {
-		toggleClass,
-		innerWidth,
-		loggedUser,
-		channelsLength,
-		currentChannelChange,
-		currentChannel
-	} from '$lib/stores/index';
+	import { toggleClass, innerWidth, loggedUser, channelsLength } from '$lib/stores/index';
 	import SidebarChannel from './SidebarChannel.svelte';
 	import type { Channel } from '$lib/types';
 	import { afterUpdate, onMount } from 'svelte';
@@ -49,6 +42,26 @@
 			.channel('Channel')
 			.on(
 				'postgres_changes',
+				{ event: 'INSERT', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					if (payload.new['B'] === $loggedUser?.id) {
+						const channel = await getChannel(payload.new['id']);
+						channels = [...channels, channel];
+					}
+				}
+			)
+			.on(
+				'postgres_changes',
+				{ event: 'UPDATE', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					const updatedChannel = await getChannel(payload.new['id']);
+					channels = channels.map((channel) =>
+						channel.id === updatedChannel.id ? updatedChannel : channel
+					);
+				}
+			)
+			.on(
+				'postgres_changes',
 				{ event: 'DELETE', schema: 'public', table: 'Channel' },
 				async (payload) => {
 					channels = channels.filter((channel) => channel.id !== payload.old['id']);
@@ -75,18 +88,7 @@
 		<ul class="space-y-2">
 			{#if channels && channels.length != 0}
 				{#each channels as channel}
-					<SidebarChannel
-						activated={$currentChannel === channel.id}
-						on:click={() => {
-							const previous = $currentChannel;
-							$currentChannel = channel.id;
-							if (previous !== $currentChannel) {
-								$currentChannelChange = true;
-							} else {
-								$currentChannelChange = false;
-							}
-						}}
-					>
+					<SidebarChannel {channel}>
 						{channel.name}
 					</SidebarChannel>
 				{/each}
