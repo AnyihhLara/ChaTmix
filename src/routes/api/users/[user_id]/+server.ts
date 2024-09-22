@@ -36,7 +36,7 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 	}
 };
 
-//update an user
+//update an user (exit channel)
 export const PUT: RequestHandler = async ({ params: { user_id }, request }) => {
 	const userData = await request.json();
 
@@ -45,9 +45,12 @@ export const PUT: RequestHandler = async ({ params: { user_id }, request }) => {
 			where: {
 				id: user_id
 			},
-			data: userData
+			data: {
+				channels: {
+					disconnect: { id: userData.channels[0].id }
+				}
+			}
 		});
-
 		return json({
 			message: `User ${user_id} updated successfully`
 		});

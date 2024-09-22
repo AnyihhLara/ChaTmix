@@ -29,7 +29,7 @@
 </script>
 
 <DropdownItem on:click={() => (defaultModal = true)}>Your channels</DropdownItem>
-<Modal title="Channels" bind:open={defaultModal} class="min-w-full">
+<Modal title="Channels" bind:open={defaultModal} class="min-w-full" size='lg'>
 	<Table hoverable={true} class="">
 		<TableHead>
 			<TableHeadCell>Name</TableHeadCell>
