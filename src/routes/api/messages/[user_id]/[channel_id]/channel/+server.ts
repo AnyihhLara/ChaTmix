@@ -22,6 +22,7 @@ export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) =
 				id: messageData.id,
 				timestamp: messageData.timestamp,
 				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
 				host: user_id !== messageData.user.id,
 				user: {
 					id: messageData.user.id,

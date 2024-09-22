@@ -17,15 +17,16 @@ export const GET: RequestHandler = async () => {
 				id: messageData.id,
 				timestamp: messageData.timestamp,
 				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
 				channel: {
 					id: messageData.channel.id,
-					name: messageData.channel.name,
+					name: messageData.channel.name
 				},
 				user: {
 					id: messageData.user.id,
 					name: messageData.user.name,
-					email: messageData.user.email,
-				},
+					email: messageData.user.email
+				}
 			}));
 			return json(messages);
 		} else {

@@ -1,4 +1,5 @@
 import database from '$lib/db/database';
+import { supabase } from '$lib/supabaseClient';
 import type { Message } from '$lib/types';
 import { Prisma } from '@prisma/client';
 import { error, json, type RequestHandler } from '@sveltejs/kit';
@@ -15,7 +16,8 @@ export const GET: RequestHandler = async ({ params: { message_id } }) => {
 			const message: Message = {
 				id: messageData.id,
 				timestamp: messageData.timestamp,
-				message: messageData.message
+				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : ''
 			};
 			return json(message);
 		} else {
@@ -61,6 +63,28 @@ export const PUT: RequestHandler = async ({ params: { message_id }, request }) =
 //delete a message
 export const DELETE: RequestHandler = async ({ params: { message_id } }) => {
 	try {
+		const message = await database.message.findUnique({
+			where: {
+				id: Number(message_id)
+			}
+		});
+
+		if (!message) {
+			return error(404, 'Message not found');
+		}
+
+		if (message.fileUrl) {
+			const fileName = message.fileUrl.split('/').pop();
+			if (fileName) {
+				const { error: deleteFileError } = await supabase.storage
+					.from('message-files')
+					.remove([fileName]);
+
+				if (deleteFileError) {
+					throw new Error(`Error deleting file: ${deleteFileError.message}`);
+				}
+			}
+		}
 		await database.message.delete({
 			where: {
 				id: Number(message_id)
