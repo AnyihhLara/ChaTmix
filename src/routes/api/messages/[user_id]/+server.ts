@@ -19,6 +19,7 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 				id: messageData.id,
 				timestamp: messageData.timestamp,
 				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
 				channel: {
 					id: messageData.channel.id,
 					name: messageData.channel.name
@@ -39,7 +40,7 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 	}
 };
 
-//delete all memberships from a user
+//delete all messages from a user
 export const DELETE: RequestHandler = async ({ params: { user_id } }) => {
 	try {
 		await database.message.deleteMany({

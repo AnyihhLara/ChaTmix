@@ -29,6 +29,7 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 				id: messageData.id,
 				timestamp: messageData.timestamp,
 				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
 				host: false
 			};
 			return json(message);
@@ -62,7 +63,8 @@ export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) =
 			const messages: Message[] = messagesData.map((messageData) => ({
 				id: messageData.id,
 				timestamp: messageData.timestamp,
-				message: messageData.message
+				message: messageData.message,
+				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
 			}));
 			return json(messages);
 		} else {
