@@ -1,31 +1,14 @@
 <script lang="ts">
 	import { createChannel, updateChannel } from '$lib/services/channelService';
-	import type { Channel } from '$lib/types';
-	import { channelsLength, loggedUser } from '$lib/stores';
-	import { Label, Input, Button, Modal, DropdownItem, MultiSelect, Badge } from 'flowbite-svelte';
-	import { PlusOutline, EditOutline } from 'flowbite-svelte-icons';
-	import { onMount } from 'svelte';
 	import { getAllUsers } from '$lib/services/userService';
+	import { channelsLength, loggedUser } from '$lib/stores';
+	import type { Channel } from '$lib/types';
+	import { Badge, Button, DropdownItem, Input, Label, Modal, MultiSelect } from 'flowbite-svelte';
+	import { EditOutline, PlusOutline } from 'flowbite-svelte-icons';
+	import { onMount } from 'svelte';
 
-	onMount(async () => {
-		await updateUsers();
-		if (typeModal === 'Edit') {
-			mapSelected();
-		}
-	});
-
-	async function updateUsers() {
-		if ($loggedUser) {
-			const usersData = await getAllUsers();
-			users = usersData
-				.filter((userData) => userData.id !== $loggedUser.id)
-				.map((userData) => ({
-					value: userData.id,
-					name: userData.name ? userData.name : userData.id
-				}));
-		}
-	}
-	export let channel: Channel = { id: 0, name: '', members: [] };
+	export let channel: Channel = { id: 0, name: '', members: [] },
+		typeModal = 'Create';
 
 	let defaultModal = false,
 		title = '',
@@ -35,8 +18,6 @@
 		selected: (string | number)[] = [],
 		error: string | null = null,
 		success: string | null = null;
-
-	export let typeModal = 'Create';
 
 	$: if (typeModal === 'Create') {
 		title = 'Create new channel';
@@ -49,23 +30,16 @@
 		disabled = true;
 	}
 	$: if (channel.name?.length && channel.name.length >= 26) {
-		channel.name = channel.name.substring(0,27);
+		channel.name = channel.name.substring(0, 27);
 	}
-	function mapMembers() {
-		if ($loggedUser && channel.members !== undefined) {
-			channel.members = selected.map((member) => ({
-				id: member.toString()
-			}));
-			channel.members = [...channel.members, { id: $loggedUser.id }];
+
+	onMount(async () => {
+		await updateUsers();
+		if (typeModal === 'Edit') {
+			mapSelected();
 		}
-	}
-	function mapSelected() {
-		if (channel.members != undefined && $loggedUser) {
-			selected = channel.members
-				.filter((member) => member.id !== $loggedUser.id)
-				.map((member) => member.id);
-		}
-	}
+	});
+
 	async function handleSubmit() {
 		disabledLoading = true;
 		mapMembers();
@@ -90,7 +64,32 @@
 			}
 		}
 	}
-
+	function mapMembers() {
+		if ($loggedUser && channel.members !== undefined) {
+			channel.members = selected.map((member) => ({
+				id: member.toString()
+			}));
+			channel.members = [...channel.members, { id: $loggedUser.id }];
+		}
+	}
+	function mapSelected() {
+		if (channel.members != undefined && $loggedUser) {
+			selected = channel.members
+				.filter((member) => member.id !== $loggedUser.id)
+				.map((member) => member.id);
+		}
+	}
+	async function updateUsers() {
+		if ($loggedUser) {
+			const usersData = await getAllUsers();
+			users = usersData
+				.filter((userData) => userData.id !== $loggedUser.id)
+				.map((userData) => ({
+					value: userData.id,
+					name: userData.name ? userData.name : userData.id
+				}));
+		}
+	}
 	function resetForm() {
 		if ($channelsLength) {
 			$channelsLength++;

@@ -1,7 +1,7 @@
-import database from "$lib/db/database";
-import type { Message } from "$lib/types";
-import { Prisma } from "@prisma/client";
-import { error, json, type RequestHandler } from "@sveltejs/kit";
+import database from '$lib/db/database';
+import type { Message } from '$lib/types';
+import { Prisma } from '@prisma/client';
+import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //get all messages from a channel
 export const GET: RequestHandler = async ({ params: { user_id, channel_id } }) => {

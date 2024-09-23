@@ -1,4 +1,4 @@
-import { redirect, error as e } from '@sveltejs/kit';
+import { error as e, redirect } from '@sveltejs/kit';
 
 export const GET = async (event): Promise<void> => {
 	const {

@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import { Label } from 'flowbite-svelte';
 	import AppName from './AppName.svelte';
-	import { page } from '$app/stores';
 
 	let error: string | null = null;
+
 	$: if ($page.form?.error) {
 		error = $page.form?.error;
 		setTimeout(() => (error = null), 5000);

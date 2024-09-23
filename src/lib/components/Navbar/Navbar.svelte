@@ -1,9 +1,9 @@
 <script lang="ts">
+	import { DarkMode } from 'flowbite-svelte';
 	import SidebarToggler from '../Sidebar/SidebarToggler.svelte';
 	import Channel from './Channel.svelte';
 	import Logo from './Logo.svelte';
 	import User from './User.svelte';
-	import { DarkMode } from 'flowbite-svelte';
 </script>
 
 <nav

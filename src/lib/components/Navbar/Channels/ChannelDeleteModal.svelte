@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { deleteChannel } from '$lib/services/channelService';
+	import { channelsLength, currentChannel, loggedUser } from '$lib/stores';
 	import type { Channel } from '$lib/types';
-	import { channelsLength, loggedUser, currentChannel } from '$lib/stores';
-	import { Button, Modal, Label } from 'flowbite-svelte';
+	import { Button, Label, Modal } from 'flowbite-svelte';
 	import { TrashBinSolid } from 'flowbite-svelte-icons';
 
 	export let channel: Channel;
@@ -25,12 +25,12 @@
 						$currentChannel = -1;
 					}
 					success = response;
-					resetForm()
+					resetForm();
 				}
 			} catch (e) {
 				if (e instanceof Error) {
 					error = e.message;
-					resetForm()
+					resetForm();
 				}
 			}
 		}

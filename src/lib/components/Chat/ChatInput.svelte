@@ -1,18 +1,33 @@
 <script lang="ts">
-	import { Input, Helper, Fileupload } from 'flowbite-svelte';
-	import SendButton from './SendButton.svelte';
-	import { currentChannel, loggedUser } from '$lib/stores';
 	import { createMessage } from '$lib/services/messageService';
-	import type { Message } from '$lib/types';
+	import { currentChannel, loggedUser } from '$lib/stores';
 	import { supabase } from '$lib/supabaseClient';
+	import type { Message } from '$lib/types';
+	import { Fileupload, Helper, Input } from 'flowbite-svelte';
+	import SendButton from './SendButton.svelte';
 
 	let message: Message = { id: 0, message: '', fileUrl: '' },
 		error: string | null = null,
 		files: FileList | undefined,
-		disabledButton = true;
+		disabledButton = true,
+		loading = false;
+
 	$: disabled = $currentChannel === -1;
+	$: if (message.message?.trim() !== '' || files) {
+		disabledButton = false;
+	} else {
+		disabledButton = true;
+	}
+	$: if (files && files[0] && !files[0].type.startsWith('image/')) {
+		files = undefined;
+		error = 'Only can upload images.';
+		setTimeout(() => {
+			error = null;
+		}, 3000);
+	}
 
 	async function handleSend() {
+		loading = true;
 		if ($loggedUser && $currentChannel && $currentChannel !== -1) {
 			try {
 				if (files) {
@@ -44,6 +59,7 @@
 		}
 	}
 	function resetForm() {
+		loading = false;
 		message = { id: 0, message: '', fileUrl: '' };
 		files = undefined;
 		setTimeout(() => {
@@ -51,21 +67,13 @@
 		}, 3000);
 		disabled = false;
 	}
-	$: if (message.message?.trim() !== '' || files) {
-		disabledButton = false;
-	} else {
-		disabledButton = true;
-	}
-	$: if (files && !files[0].type.startsWith('image/')) {
-		files = undefined;
-		error = 'Only can upload images.';
-		setTimeout(() => {
-			error = null;
-		}, 3000);
-	}
 </script>
 
-<div class="pt-4 pb-2 px-8 sticky bottom-0 w-full bg-gray-50 dark:bg-gray-900 h-15">
+<div
+	class="pt-4 pb-2 px-8 sticky bottom-0 w-full bg-gray-50 dark:bg-gray-900 h-15 {loading
+		? 'cursor-wait'
+		: ''}"
+>
 	<form action="" autocomplete="off" on:submit|preventDefault={handleSend}>
 		<div class="grid">
 			<div class="flex justify-between gap-2 items-center">

@@ -1,12 +1,11 @@
 <script lang="ts">
-	import '../app.css';
-	import { innerWidth } from '$lib/stores/index';
-
-	//supabase-auth
 	import { invalidate } from '$app/navigation';
+	import { innerWidth } from '$lib/stores/index';
 	import { onMount } from 'svelte';
+	import '../app.css';
 
 	export let data;
+	
 	$: ({ session, supabase } = data);
 
 	onMount(() => {

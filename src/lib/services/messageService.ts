@@ -1,14 +1,27 @@
 import type { Message } from '$lib/types';
 import { fetchApi } from '$lib/utils';
 
-export async function createMessage(userId: string, channelId: number,  messageData: Message): Promise<Message> {
+export async function createMessage(
+	userId: string,
+	channelId: number,
+	messageData: Message
+): Promise<Message> {
 	return await fetchApi(`/api/messages/${userId}/${channelId}`, 'POST', messageData);
 }
-export async function getMessage(userId: string, channelId: number, messageId: number): Promise<Message> {
+export async function getMessage(
+	userId: string,
+	channelId: number,
+	messageId: number
+): Promise<Message> {
 	return await fetchApi(`/api/messages/${userId}/${channelId}/${messageId}`, 'GET');
 }
-export async function updateMessage(userId: string, channelId: number, messageId: number,  messageData: Message) {
-	return await fetchApi(`/api/messages/${userId}/${channelId}/${messageId}`, 'PUT',  messageData);
+export async function updateMessage(
+	userId: string,
+	channelId: number,
+	messageId: number,
+	messageData: Message
+) {
+	return await fetchApi(`/api/messages/${userId}/${channelId}/${messageId}`, 'PUT', messageData);
 }
 export async function deleteMessage(userId: string, channelId: number, messageId: number) {
 	return await fetchApi(`/api/messages/${userId}/${channelId}/${messageId}`, 'DELETE');
@@ -35,7 +48,10 @@ export async function deleteAllChannelMessages(userId: string, channelId: number
 	return await fetchApi(`/api/messages/${userId}/${channelId}/channel`, 'DELETE');
 }
 
-export async function getAllUserMessagesChannel(userId: string, channelId: number): Promise<Message[]> {
+export async function getAllUserMessagesChannel(
+	userId: string,
+	channelId: number
+): Promise<Message[]> {
 	return await fetchApi(`/api/messages/${userId}/${channelId}`, 'GET');
 }
 export async function deleteAllUserMessagesChannel(userId: string, channelId: number) {

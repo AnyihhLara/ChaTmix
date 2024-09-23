@@ -1,18 +1,22 @@
 <script lang="ts">
+	import { getAllUserChannels } from '$lib/services/channelService';
+	import { loggedUser } from '$lib/stores';
+	import type { Channel } from '$lib/types';
 	import {
 		DropdownItem,
 		Modal,
+		Spinner,
 		Table,
 		TableBody,
 		TableHead,
-		TableHeadCell,
-		Spinner
+		TableHeadCell
 	} from 'flowbite-svelte';
-	import ChannelItem from './ChannelItem.svelte';
-	import type { Channel } from '$lib/types';
 	import { onMount } from 'svelte';
-	import { getAllUserChannels } from '$lib/services/channelService';
-	import { loggedUser } from '$lib/stores';
+	import ChannelItem from './ChannelItem.svelte';
+
+	let channels: Channel[] = [],
+		loading = true,
+		defaultModal = false;
 
 	onMount(async () => {
 		if ($loggedUser) {
@@ -22,14 +26,10 @@
 			}
 		}
 	});
-
-	let channels: Channel[] = [],
-		loading = true;
-	let defaultModal = false;
 </script>
 
 <DropdownItem on:click={() => (defaultModal = true)}>Your channels</DropdownItem>
-<Modal title="Channels" bind:open={defaultModal} class="min-w-full" size='lg'>
+<Modal title="Channels" bind:open={defaultModal} class="min-w-full" size="lg">
 	<Table hoverable={true} class="">
 		<TableHead>
 			<TableHeadCell>Name</TableHeadCell>

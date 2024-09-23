@@ -9,7 +9,7 @@
 			errorInfo = "Sorry, we can't find that page. You'll find lots to explore on the home page.";
 			break;
 		case 'Internal Error':
-			errorInfo = "We are already working to solve the problem.";
+			errorInfo = 'We are already working to solve the problem.';
 			break;
 		default:
 			errorInfo = 'Enhance your calm.';
@@ -20,4 +20,3 @@
 <ErrorPage>
 	<span slot="error-info">{errorInfo}</span>
 </ErrorPage>
-
