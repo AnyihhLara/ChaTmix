@@ -5,6 +5,7 @@
 	import type { PageData } from '../$types';
 
 	export let data: PageData;
+	
 	$: $loggedUser = data.session?.user;
 </script>
 

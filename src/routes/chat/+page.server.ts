@@ -12,5 +12,5 @@ export const actions: Actions = {
 				throw new Error('Something went wrong logging you out');
 			}
 		}
-	},
+	}
 };

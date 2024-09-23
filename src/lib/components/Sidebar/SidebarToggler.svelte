@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { toggleClass } from '$lib/stores/index';
 	import { Button } from 'flowbite-svelte';
 	import { BarsOutline } from 'flowbite-svelte-icons';
-	import { toggleClass } from '$lib/stores/index';
 
 	function handleToggle() {
 		if ($toggleClass === '') {

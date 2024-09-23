@@ -1,10 +1,10 @@
 <script lang="ts">
+	import type { Channel } from '$lib/types';
 	import { TableBodyCell, TableBodyRow } from 'flowbite-svelte';
 	import ChannelDeleteModal from './ChannelDeleteModal.svelte';
 	import ChannelModal from './ChannelModal.svelte';
-	import type { Channel } from '$lib/types';
 
-	export let channel:Channel;
+	export let channel: Channel;
 </script>
 
 <TableBodyRow>

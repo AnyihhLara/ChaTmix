@@ -1,7 +1,7 @@
 import database from '$lib/db/database';
-import { error, json, type RequestHandler } from '@sveltejs/kit';
 import type { User } from '$lib/types';
 import { Prisma } from '@prisma/client';
+import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 //get an user
 export const GET: RequestHandler = async ({ params: { user_id } }) => {

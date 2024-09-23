@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { currentChannel, currentChannelChange, loggedUser } from '$lib/stores';
-	import { MessageCaptionSolid, InfoCircleOutline } from 'flowbite-svelte-icons';
+	import { MessageCaptionSolid } from 'flowbite-svelte-icons';
 	import ExitChannelModal from './Channel/ExitChannelModal.svelte';
 	import InfoChannel from './Channel/InfoChannel.svelte';
 
@@ -30,7 +30,11 @@
 		>
 		<div class="flex-shrink-0 flex items-center">
 			{#if activated}
-				<InfoChannel channelId={channel.id} channelName={channel.name} channelOwnerId={channel.id_user_owner} />
+				<InfoChannel
+					channelId={channel.id}
+					channelName={channel.name}
+					channelOwnerId={channel.id_user_owner}
+				/>
 				{#if exitChannel}
 					<ExitChannelModal channelId={channel.id} />
 				{/if}

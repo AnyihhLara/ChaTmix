@@ -20,7 +20,7 @@ export const GET: RequestHandler = async ({ params: { channel_id } }) => {
 				id: channelData.id,
 				name: channelData.name,
 				members: channelData.members,
-				owner: channelData.owner,
+				owner: channelData.owner
 			};
 			return json(channel);
 		} else {

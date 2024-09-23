@@ -1,19 +1,19 @@
 <script lang="ts">
-	import {
-		Modal,
-		Table,
-		TableBody,
-		TableHead,
-		TableHeadCell,
-		Spinner,
-		TableBodyRow,
-		TableBodyCell
-	} from 'flowbite-svelte';
-	import type { User } from '$lib/types';
-	import { onMount } from 'svelte';
 	import { getChannel } from '$lib/services/channelService';
 	import { loggedUser } from '$lib/stores';
+	import type { User } from '$lib/types';
+	import {
+		Modal,
+		Spinner,
+		Table,
+		TableBody,
+		TableBodyCell,
+		TableBodyRow,
+		TableHead,
+		TableHeadCell
+	} from 'flowbite-svelte';
 	import { InfoCircleOutline } from 'flowbite-svelte-icons';
+	import { onMount } from 'svelte';
 
 	export let channelId, channelName, channelOwnerId;
 

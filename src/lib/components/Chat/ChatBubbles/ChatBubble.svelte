@@ -1,8 +1,8 @@
 <script lang="ts">
-	import HostChatBubble from './HostChatBubble.svelte';
-	import GuestChatBubble from './GuestChatBubble.svelte';
-	import ChatBubbleContent from './ChatBubbleContent.svelte';
 	import type { Message } from '$lib/types';
+	import ChatBubbleContent from './ChatBubbleContent.svelte';
+	import GuestChatBubble from './GuestChatBubble.svelte';
+	import HostChatBubble from './HostChatBubble.svelte';
 
 	export let message: Message;
 

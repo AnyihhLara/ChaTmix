@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { toggleClass, innerWidth, loggedUser, channelsLength } from '$lib/stores/index';
-	import SidebarChannel from './SidebarChannel.svelte';
+	import { getChannel } from '$lib/services/channelService';
+	import { getUser } from '$lib/services/userService';
+	import { channelsLength, innerWidth, loggedUser, toggleClass } from '$lib/stores/index';
+	import { supabase } from '$lib/supabaseClient';
 	import type { Channel } from '$lib/types';
 	import { afterUpdate, onMount } from 'svelte';
-	import { getUser } from '$lib/services/userService';
-	import { supabase } from '$lib/supabaseClient';
-	import { getChannel } from '$lib/services/channelService';
+	import SidebarChannel from './SidebarChannel.svelte';
 
-	async function updateChannels() {
-		if ($loggedUser) {
-			const userData = await getUser($loggedUser.id);
-			channels = userData.channels ? userData.channels : [];
-			$channelsLength = channels?.length;
-		}
+	let channels: Channel[];
+
+	$: if ($innerWidth >= 768) {
+		$toggleClass = '-translate-x-full';
 	}
+
 	onMount(async () => {
 		await updateChannels();
 		supabase
@@ -69,16 +68,19 @@
 			)
 			.subscribe();
 	});
-
-	let channels: Channel[];
-	$: if ($innerWidth >= 768) {
-		$toggleClass = '-translate-x-full';
-	}
 	afterUpdate(async () => {
 		if (channels?.length !== $channelsLength) {
 			await updateChannels();
 		}
 	});
+
+	async function updateChannels() {
+		if ($loggedUser) {
+			const userData = await getUser($loggedUser.id);
+			channels = userData.channels ? userData.channels : [];
+			$channelsLength = channels?.length;
+		}
+	}
 </script>
 
 <aside

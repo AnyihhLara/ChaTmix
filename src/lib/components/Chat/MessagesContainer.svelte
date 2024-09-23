@@ -1,22 +1,18 @@
 <script lang="ts">
+	import { getAllChannelMessages } from '$lib/services/messageService';
+	import { getUser } from '$lib/services/userService';
+	import { currentChannel, currentChannelChange, loggedUser } from '$lib/stores';
+	import { supabase } from '$lib/supabaseClient';
 	import type { Message } from '$lib/types';
+	import { Label, TextPlaceholder } from 'flowbite-svelte';
 	import { afterUpdate, onMount } from 'svelte';
 	import ChatBubble from './ChatBubbles/ChatBubble.svelte';
-	import { getAllChannelMessages } from '$lib/services/messageService';
-	import { currentChannel, loggedUser, currentChannelChange } from '$lib/stores';
-	import { Label, TextPlaceholder } from 'flowbite-svelte';
-	import { supabase } from '$lib/supabaseClient';
-	import { getUser } from '$lib/services/userService';
-	let chatContainer: HTMLElement;
 
-	function scrollToBottom() {
-		if (chatContainer) {
-			chatContainer.scrollTop = chatContainer.scrollHeight;
-		}
-	}
-	let messages: Message[] = [],
+	let chatContainer: HTMLElement,
+		messages: Message[] = [],
 		loading = false,
 		error: string | null = null;
+
 	onMount(async () => {
 		if ($currentChannel !== -1) {
 			loading = true;
@@ -61,6 +57,12 @@
 		}
 		scrollToBottom();
 	});
+	
+	function scrollToBottom() {
+		if (chatContainer) {
+			chatContainer.scrollTop = chatContainer.scrollHeight;
+		}
+	}
 	async function updateMessages() {
 		if ($loggedUser && $currentChannel) {
 			try {
@@ -100,4 +102,3 @@
 		<Label color="red" class="font-medium text-center mb-1">{error}</Label>
 	{/if}
 </div>
-

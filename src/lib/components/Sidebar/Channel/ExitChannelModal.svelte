@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { loggedUser } from '$lib/stores';
-	import { Button, Modal, Label } from 'flowbite-svelte';
-	import { ArrowRightToBracketOutline } from 'flowbite-svelte-icons';
 	import { updateUser } from '$lib/services/userService';
+	import { loggedUser } from '$lib/stores';
+	import { Button, Label, Modal } from 'flowbite-svelte';
+	import { ArrowRightToBracketOutline } from 'flowbite-svelte-icons';
 
 	export let channelId;
 
@@ -23,7 +23,7 @@
 						id: $loggedUser?.id,
 						channels: [{ id: channelId }]
 					});
-                    success="Channel left successfully."
+					success = 'Channel left successfully.';
 				}
 			} catch (e) {
 				if (e instanceof Error) {
@@ -54,7 +54,7 @@
 	title="Leave the channel"
 	bind:open={defaultModal}
 	size="sm"
-	class="{disabledLoading ? 'cursor-wait' : ''}"
+	class={disabledLoading ? 'cursor-wait' : ''}
 >
 	<ArrowRightToBracketOutline class="text-gray-400 dark:text-gray-500 w-11 h-11 mb-3.5 mx-auto" />
 	<p class="mb-4 text-gray-500 dark:text-gray-300 text-center">
