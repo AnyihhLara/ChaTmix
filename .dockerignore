@@ -1,0 +1,14 @@
+node_modules
+.vscode
+/build
+
+.env.*
+.npm*
+.git*
+.prettier*
+.gitignore
+README.md
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+
+*.log
