@@ -9,10 +9,10 @@
 	let component = GuestChatBubble,
 		timestamp: string | undefined;
 
-	$: if (message.host) {
-		component = HostChatBubble;
-	} else {
+	$: if (message.guest) {
 		component = GuestChatBubble;
+	} else {
+		component = HostChatBubble;
 	}
 	$: if (message) {
 		timestamp = message.timestamp?.toLocaleString();

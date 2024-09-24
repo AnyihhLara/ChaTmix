@@ -23,16 +23,12 @@
 				async (payload) => {
 					if (payload.new['B'] === $loggedUser?.id) {
 						const channel = await getChannel(payload.new['A']);
-						channels = [...channels, channel];
-					}
-				}
-			)
-			.on(
-				'postgres_changes',
-				{ event: 'DELETE', schema: 'public', table: '_ChannelMembers' },
-				async (payload) => {
-					if (payload.old['B'] === $loggedUser?.id) {
-						channels = channels.filter((channel) => channel.id !== payload.old['A']);
+						if (
+							channels.filter((chn) => channel.id === chn.id).length <= 0
+						) {
+							channels = [...channels, channel];
+							$channelsLength = channels.length;
+						}
 					}
 				}
 			)
@@ -41,22 +37,20 @@
 			.channel('Channel')
 			.on(
 				'postgres_changes',
-				{ event: 'INSERT', schema: 'public', table: 'Channel' },
-				async (payload) => {
-					if (payload.new['B'] === $loggedUser?.id) {
-						const channel = await getChannel(payload.new['id']);
-						channels = [...channels, channel];
-					}
-				}
-			)
-			.on(
-				'postgres_changes',
 				{ event: 'UPDATE', schema: 'public', table: 'Channel' },
 				async (payload) => {
 					const updatedChannel = await getChannel(payload.new['id']);
-					channels = channels.map((channel) =>
-						channel.id === updatedChannel.id ? updatedChannel : channel
-					);
+					if (
+						updatedChannel.members &&
+						updatedChannel.members.filter((member) => member.id === $loggedUser?.id).length <= 0
+					) {
+						channels = channels.filter((channel) => channel.id !== payload.new['id']);
+					} else {
+						channels = channels.map((channel) =>
+							channel.id === updatedChannel.id ? updatedChannel : channel
+						);
+					}
+					$channelsLength = channels.length;
 				}
 			)
 			.on(
@@ -89,7 +83,7 @@
 	<div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
 		<ul class="space-y-2">
 			{#if channels && channels.length != 0}
-				{#each channels as channel}
+				{#each channels as channel (channel.id)}
 					<SidebarChannel {channel}>
 						{channel.name}
 					</SidebarChannel>

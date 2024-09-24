@@ -30,7 +30,7 @@ export const POST: RequestHandler = async ({ params: { user_id, channel_id }, re
 				timestamp: messageData.timestamp,
 				message: messageData.message,
 				fileUrl: messageData.fileUrl ? messageData.fileUrl : '',
-				host: false
+				guest: false
 			};
 			return json(message);
 		} else {

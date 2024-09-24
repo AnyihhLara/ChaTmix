@@ -32,7 +32,8 @@
 							message: payload.new['message'],
 							timestamp: payload.new['timestamp'],
 							fileUrl: payload.new['fileUrl'],
-							user: user
+							user: user,
+							guest: $loggedUser?.id !== user.id
 						}
 					];
 				}

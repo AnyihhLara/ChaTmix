@@ -94,7 +94,14 @@
 		if ($channelsLength) {
 			$channelsLength++;
 		}
+		if (typeModal === 'Create') {
+			channel = { id: 0, name: '', members: [] };
+			selected = [];
+		}
 		setTimeout(() => {
+			success = null;
+			disabledLoading = false;
+			error = null;
 			defaultModal = false;
 		}, 3000);
 	}

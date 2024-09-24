@@ -12,7 +12,7 @@ export type Message = {
 	message?: string;
 	user?: User;
 	channel?: Channel;
-	host?: boolean;
+	guest?: boolean;
 	fileUrl?: string;
 };
 

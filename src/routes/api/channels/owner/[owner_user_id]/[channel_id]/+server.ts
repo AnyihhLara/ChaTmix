@@ -8,18 +8,39 @@ export const PUT: RequestHandler = async ({ params: { channel_id, owner_user_id 
 	const channelData: Channel = await request.json();
 
 	try {
-		await database.channel.update({
-			where: {
-				id: Number(channel_id),
-				id_user_owner: owner_user_id
-			},
-			data: {
-				name: channelData.name ? channelData.name.toString() : '',
-				members: {
-					connect: channelData.members?.map((member) => ({ id: member.id }))
-				}
-			}
-		});
+		const currentChannel = await database.channel.findUnique({
+            where: {
+                id: Number(channel_id),
+                id_user_owner: owner_user_id
+            },
+            include: {
+                members: true
+            }
+        });
+
+        if (!currentChannel) {
+            return error(404, 'Channel not found');
+        }
+
+        const currentMemberIds = currentChannel.members.map(member => member.id);
+        const newMemberIds = channelData.members?.map(member => member.id) || [];
+
+        const membersToAdd = newMemberIds.filter(id => !currentMemberIds.includes(id));
+        const membersToRemove = currentMemberIds.filter(id => !newMemberIds.includes(id));
+
+        await database.channel.update({
+            where: {
+                id: Number(channel_id),
+                id_user_owner: owner_user_id
+            },
+            data: {
+                name: channelData.name ? channelData.name.toString() : '',
+                members: {
+                    connect: membersToAdd.map(id => ({ id })),
+                    disconnect: membersToRemove.map(id => ({ id }))
+                }
+            }
+        });
 
 		return json({
 			message: `Channel ${channel_id} updated successfully.`

@@ -40,6 +40,10 @@
 			$channelsLength--;
 		}
 		setTimeout(() => {
+			channel = { id: 0 };
+			success = null;
+			error = null;
+			disabledLoading = false;
 			defaultModal = false;
 		}, 3000);
 	}

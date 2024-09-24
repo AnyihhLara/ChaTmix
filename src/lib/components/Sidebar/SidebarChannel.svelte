@@ -7,7 +7,7 @@
 	export let channel;
 
 	$: activated = $currentChannel === channel.id;
-	$: exitChannel = channel.id_user_owner !== $loggedUser?.id;
+	$: exitChannel = channel.owner.id !== $loggedUser?.id;
 </script>
 
 <li>
@@ -29,11 +29,11 @@
 			><slot /></span
 		>
 		<div class="flex-shrink-0 flex items-center">
-			{#if activated}
+			{#if activated && channel}
 				<InfoChannel
 					channelId={channel.id}
 					channelName={channel.name}
-					channelOwnerId={channel.id_user_owner}
+					channelOwnerId={channel.owner.id}
 				/>
 				{#if exitChannel}
 					<ExitChannelModal channelId={channel.id} />

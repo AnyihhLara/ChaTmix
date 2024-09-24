@@ -11,8 +11,9 @@ export const GET: RequestHandler = async ({ params: { user_id } }) => {
 				id: user_id
 			},
 			include: {
-				channels: true
-			}
+				channels: { include: { owner: true } }
+			},
+			
 		});
 		if (userData) {
 			const user: User = {
