@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getAllUserChannels } from '$lib/services/channelService';
+	import { getAllUserChannels, getChannel } from '$lib/services/channelService';
 	import { loggedUser } from '$lib/stores';
 	import type { Channel } from '$lib/types';
 	import {
@@ -13,6 +13,7 @@
 	} from 'flowbite-svelte';
 	import { onMount } from 'svelte';
 	import ChannelItem from './ChannelItem.svelte';
+	import { supabase } from '$lib/supabaseClient';
 
 	let channels: Channel[] = [],
 		loading = true,
@@ -25,6 +26,40 @@
 				loading = false;
 			}
 		}
+		supabase
+			.channel('Channel')
+			.on(
+				'postgres_changes',
+				{ event: 'INSERT', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					if (payload.new['id_user_owner'] === $loggedUser?.id) {
+						const channel = await getChannel(payload.new['id']);
+						channels = [...channels, channel];
+					}
+				}
+			)
+			.on(
+				'postgres_changes',
+				{ event: 'UPDATE', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					if (payload.new['id_user_owner'] === $loggedUser?.id) {
+						const updatedChannel = await getChannel(payload.new['id']);
+						channels = channels.map((channel) =>
+							channel.id === updatedChannel.id ? updatedChannel : channel
+						);
+					}
+				}
+			)
+			.on(
+				'postgres_changes',
+				{ event: 'DELETE', schema: 'public', table: 'Channel' },
+				async (payload) => {
+					if (payload.old['id_user_owner'] === $loggedUser?.id) {
+						channels = channels.filter((channel) => channel.id !== payload.old['id']);
+					}
+				}
+			)
+			.subscribe();
 	});
 </script>
 

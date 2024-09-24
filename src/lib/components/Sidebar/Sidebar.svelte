@@ -41,16 +41,6 @@
 			.channel('Channel')
 			.on(
 				'postgres_changes',
-				{ event: 'INSERT', schema: 'public', table: 'Channel' },
-				async (payload) => {
-					if (payload.new['B'] === $loggedUser?.id) {
-						const channel = await getChannel(payload.new['id']);
-						channels = [...channels, channel];
-					}
-				}
-			)
-			.on(
-				'postgres_changes',
 				{ event: 'UPDATE', schema: 'public', table: 'Channel' },
 				async (payload) => {
 					const updatedChannel = await getChannel(payload.new['id']);
